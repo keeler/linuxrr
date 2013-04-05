@@ -41,7 +41,7 @@ static void dequeue_task_other_rr(struct rq *rq, struct task_struct *p, int slee
 	update_curr_other_rr(rq);
 
 	list_del( &p->other_rr_run_list );
-	p->other_rr.nr_running--;
+	rq->other_rr.nr_running--;
 }
 
 /*
@@ -59,7 +59,7 @@ static void requeue_task_other_rr(struct rq *rq, struct task_struct *p)
 static void
 yield_task_other_rr(struct rq *rq)
 {
-	requeue_task_other_rr( rq, &rq->curr );
+	requeue_task_other_rr( rq, rq->curr );
 }
 
 /*
@@ -76,10 +76,8 @@ static void check_preempt_curr_other_rr(struct rq *rq, struct task_struct *p, in
 static struct task_struct *pick_next_task_other_rr(struct rq *rq)
 {
 	struct task_struct *next;
-	struct list_head *queue;
-	struct other_rr_rq *other_rr_rq;
 
-	if( list_empty( rq->other_rr.queue ) )
+	if( list_empty( &rq->other_rr.queue ) )
 	{
 		return NULL;
 	}
