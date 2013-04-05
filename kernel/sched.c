@@ -6504,6 +6504,9 @@ __setscheduler(struct rq *rq, struct task_struct *p, int policy, int prio)
 	case SCHED_RR:
 		p->sched_class = &rt_sched_class;
 		break;
+	case SCHED_OTHER_RR:
+		printk( "__setscheduler(): SCHED_OTHER_RR policy selected!\n" );
+		p->sched_class = &other_rr_sched_class;
 	}
 
 	p->rt_priority = prio;
@@ -6550,7 +6553,8 @@ recheck:
 		reset_on_fork = !!(policy & SCHED_RESET_ON_FORK);
 		policy &= ~SCHED_RESET_ON_FORK;
 
-		if (policy != SCHED_FIFO && policy != SCHED_RR &&
+		if (policy != SCHED_OTHER_RR &&
+		policy != SCHED_FIFO && policy != SCHED_RR &&
 		policy != SCHED_NORMAL && policy != SCHED_BATCH &&
 		policy != SCHED_IDLE)
 			return -EINVAL;
