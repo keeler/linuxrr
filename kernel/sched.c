@@ -6397,6 +6397,12 @@ int can_nice(const struct task_struct *p, const int nice)
 
 #ifdef __ARCH_WANT_SYS_NICE
 
+SYSCALL_DEFINE1( sched_other_rr_setquantum, unsigned int, quantum )
+{
+	printk( "sys_sched_other_rr_setquantum() reached!\n" );
+	other_rr_time_slice = quantum;
+}
+
 /*
  * sys_nice - change the priority of the current process.
  * @increment: priority increment
