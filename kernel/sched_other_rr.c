@@ -40,7 +40,7 @@ static void dequeue_task_other_rr(struct rq *rq, struct task_struct *p, int slee
 	// first update the task's runtime statistics
 	update_curr_other_rr(rq);
 
-	list_del( &rq->curr.other_rr_run_list );
+	list_del( &p->other_rr_run_list );
 	p->other_rr.nr_running--;
 }
 
