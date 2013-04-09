@@ -31,6 +31,7 @@ static void update_curr_other_rr(struct rq *rq)
  */
 static void enqueue_task_other_rr(struct rq *rq, struct task_struct *p, int wakeup, bool b)
 {
+	p->task_time_slice = other_rr_time_slice;
 	list_add_tail( &p->other_rr_run_list, &rq->other_rr.queue );
 	rq->other_rr.nr_running++;
 	printk( "enqueue(): add %ld, n = %ld\n", (unsigned long int)p, rq->other_rr.nr_running );
@@ -82,7 +83,7 @@ static struct task_struct *pick_next_task_other_rr(struct rq *rq)
 
 	if( !list_empty( &rq->other_rr.queue ) )
 	{
-		next = list_entry( &rq->other_rr.queue.next, struct task_struct, other_rr_run_list );
+		next = list_entry( rq->other_rr.queue.next, struct task_struct, other_rr_run_list );
 
 		printk( "pick() %ld\n", (unsigned long int)next );
 
@@ -200,10 +201,12 @@ static void task_tick_other_rr(struct rq *rq, struct task_struct *p,int queued)
 		// reschedule it.
 		if( p->task_time_slice-- == 0 )
 		{
-			// Mike's notes: any task tthat's being preemted should yield.
+			// Reset the task's quantum, then mark it to be
+			// rescheduled and preempt it.
+			p->task_time_slice = other_rr_time_slice;
 			set_tsk_need_resched( p );
+			yield_task_other_rr( rq );
 		}
-		yield_task_other_rr( rq );
 	}
 }
 

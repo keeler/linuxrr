@@ -6399,7 +6399,7 @@ int can_nice(const struct task_struct *p, const int nice)
 
 SYSCALL_DEFINE1( sched_other_rr_setquantum, unsigned int, quantum )
 {
-	printk( "sys_sched_other_rr_setquantum() reached!\n" );
+	printk( "sys_sched_other_rr_setquantum(): change quantum from %d to %d\n", other_rr_time_slice, quantum );
 	other_rr_time_slice = quantum;
 }
 
