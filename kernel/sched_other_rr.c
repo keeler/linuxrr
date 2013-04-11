@@ -85,8 +85,6 @@ static struct task_struct *pick_next_task_other_rr(struct rq *rq)
 	{
 		next = list_entry( rq->other_rr.queue.next, struct task_struct, other_rr_run_list );
 
-		printk( "pick() %ld\n", (unsigned long int)next );
-
 		/* after selecting a task, we need to set a timer to maintain correct
 		 * runtime statistics. You can uncomment this line after you have
 		 * written the code to select the appropriate task.
